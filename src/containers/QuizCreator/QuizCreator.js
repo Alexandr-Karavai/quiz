@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import classes from './QuizCreator.module.css'
 import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
@@ -121,7 +122,7 @@ class QuizCreator extends Component {
         const questionItem = {
             question: question.value,
             id: index,
-            rightAnswerId: this.state.rightAnswerId,
+            rightAnswerId: +this.state.rightAnswerId,
             answers: [
                 {text: option1.value, id: option1.id},
                 {text: option2.value, id: option2.id},
@@ -140,9 +141,19 @@ class QuizCreator extends Component {
         })
     }
 
-    createQuizHandler = e => {
-        e.preventDefault();
-        console.log(this.state);
+    createQuizHandler = async e => {
+        try {
+            e.preventDefault();
+            await axios.post('https://quiz-react-d35d5.firebaseio.com/quizzes.json', this.state.quiz);
+            this.setState({
+                isFormValid: false,
+                quiz: [],
+                rightAnswerId: 1,
+                formControls: createQuestion()
+            })
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     render() {

@@ -7,6 +7,10 @@
     box-sizing: border-box;
 }
 
+.ActiveQuiz span:first-child {
+    width: 600px;
+}
+
 .Question {
     display: flex;
     justify-content: space-between;

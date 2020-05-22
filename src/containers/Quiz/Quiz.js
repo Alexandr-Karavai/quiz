@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import ActiveQuiz from "../../components/ActiveQuiz/ActiveQuiz";
 import FinishedQuiz from "../../components/FinishedQuiz/FinishedQuiz";
+import Loader from "../../components/UI/Loader/Loader";
 import classes from './Quiz.module.css'
 
 class Quiz extends Component {
@@ -10,29 +12,30 @@ class Quiz extends Component {
         results: {},
         answerState: null, // {[id]: 'success' 'error'}
         quiz: [
-            {
-                id: 101,
-                question: 'What color is the sky?',
-                rightAnswerId: 123,
-                answers: [
-                    {id: 121, text: 'Black'},
-                    {id: 122, text: 'Green'},
-                    {id: 123, text: 'Blue'},
-                    {id: 124, text: 'Red'}
-                ]
-            },
-            {
-                id: 102,
-                question: 'In what year was St. Petersburg founded?',
-                rightAnswerId: 222,
-                answers: [
-                    {id: 221, text: '1700'},
-                    {id: 222, text: '1703'},
-                    {id: 223, text: '1702'},
-                    {id: 224, text: '1803'}
-                ]
-            }
-        ]
+            // {
+            //     id: 101,
+            //     question: 'What color is the sky?',
+            //     rightAnswerId: 123,
+            //     answers: [
+            //         {id: 121, text: 'Black'},
+            //         {id: 122, text: 'Green'},
+            //         {id: 123, text: 'Blue'},
+            //         {id: 124, text: 'Red'}
+            //     ]
+            // },
+            // {
+            //     id: 102,
+            //     question: 'In what year was St. Petersburg founded?',
+            //     rightAnswerId: 222,
+            //     answers: [
+            //         {id: 221, text: '1700'},
+            //         {id: 222, text: '1703'},
+            //         {id: 223, text: '1702'},
+            //         {id: 224, text: '1803'}
+            //     ]
+            // }
+        ],
+        loading: true
     }
 
     onAnswerClickHandler = answerId => {
@@ -94,26 +97,43 @@ class Quiz extends Component {
         })
     }
 
+    async componentDidMount() {
+        const id = this.props.match.params.id;
+        try {
+            const res = await axios.get(`https://quiz-react-d35d5.firebaseio.com/quizzes/${id}.json`);
+            const quiz = res.data;
+
+            this.setState({
+                quiz,
+                loading: false
+            })
+            console.log(res);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     render() {
         return (
             <div className={classes.Quiz}>
                 <div className={classes.QuizWrapper}>
                     <h1>Answer all the questions</h1>
-                    {
-                        this.state.isFinished
-                        ? <FinishedQuiz
-                            results={this.state.results}
-                            quiz={this.state.quiz}
-                            onRetry={this.retryHandler}
-                          />
-                        : <ActiveQuiz
+                    { this.state.loading
+                        ? <Loader/>
+                        : this.state.isFinished
+                            ? <FinishedQuiz
+                                results={this.state.results}
+                                quiz={this.state.quiz}
+                                onRetry={this.retryHandler}
+                            />
+                            : <ActiveQuiz
                                 answers={this.state.quiz[this.state.activeQuestion].answers}
                                 question={this.state.quiz[this.state.activeQuestion].question}
                                 onAnswerClick={this.onAnswerClickHandler}
                                 quizLength={this.state.quiz.length}
                                 answerNumber={this.state.activeQuestion + 1}
                                 answerState={this.state.answerState}
-                          />
+                            />
                     }
                 </div>
             </div>
