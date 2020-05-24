@@ -53,5 +53,4 @@ export default function quizReducers(state = initialState, action) {
         default:
             return state;
     }
-
 }
