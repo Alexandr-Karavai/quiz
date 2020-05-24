@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import classes from './Auth.module.css'
 import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
@@ -97,12 +98,32 @@ class Auth extends Component {
         })
     }
 
-    signUpHandler = () => {
-        console.log('1')
+    signUpHandler = async () => {
+        const authData = {
+            email: this.state.formControls.email.value,
+            password: this.state.formControls.password.value,
+            returnSecureToken: true
+        }
+        try {
+            const res = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBjJdxWIgguYwH9HrD81LVWlcNcV2vTpNE`, authData);
+            console.log(res.data);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
-    logInHandler = () => {
-        console.log('2')
+    signInHandler = async () => {
+        const authData = {
+            email: this.state.formControls.email.value,
+            password: this.state.formControls.password.value,
+            returnSecureToken: true
+        }
+        try {
+            const res = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBjJdxWIgguYwH9HrD81LVWlcNcV2vTpNE`, authData);
+            console.log(res.data);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     onSubmitHandler = e => {
@@ -117,17 +138,17 @@ class Auth extends Component {
                         {this.renderInputs()}
                         <Button
                             type={'success'}
+                            onClick={this.signInHandler}
+                            disabled={!this.state.isFormValid}
+                        >
+                            Sign In
+                        </Button>
+                        <Button
+                            type={'primary'}
                             onClick={this.signUpHandler}
                             disabled={!this.state.isFormValid}
                         >
                             Sign Up
-                        </Button>
-                        <Button
-                            type={'primary'}
-                            onClick={this.logInHandler}
-                            disabled={!this.state.isFormValid}
-                        >
-                            Log In
                         </Button>
                     </form>
                 </div>
