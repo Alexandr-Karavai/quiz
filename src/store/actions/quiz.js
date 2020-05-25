@@ -127,7 +127,11 @@ export function quizAnswerClick(answerId) {
             dispatch(setAnswerState({[answerId]: 'error'}, results));
 
             const timeout = window.setTimeout(() => {
-                dispatch(quizNextQuestion(state.activeQuestion + 1));
+                if (state.activeQuestion + 1 === state.quiz.length) {
+                    dispatch(finishQuiz());
+                } else {
+                    dispatch(quizNextQuestion(state.activeQuestion + 1));
+                }
                 window.clearTimeout(timeout);
             }, 1000)
         }
