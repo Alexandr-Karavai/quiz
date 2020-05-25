@@ -125,6 +125,11 @@ export function quizAnswerClick(answerId) {
         } else {
             results[question.id] = 'error';
             dispatch(setAnswerState({[answerId]: 'error'}, results));
+
+            const timeout = window.setTimeout(() => {
+                dispatch(quizNextQuestion(state.activeQuestion + 1));
+                window.clearTimeout(timeout);
+            }, 1000)
         }
     }
 }
