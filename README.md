@@ -6,7 +6,7 @@
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](/LICENSE)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Open [Quiz](https://quiz-react-d35d5.web.app) in your browser.
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
